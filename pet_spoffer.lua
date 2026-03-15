@@ -1,3 +1,72 @@
+-- EXECUTOR CHECK
+if identifyexecutor then
+    local executor = identifyexecutor()
+
+    if executor and string.find(string.lower(executor), "xeno") then
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "Executor Error",
+            Text = "XENO NOT SUPPORT",
+            Duration = 10
+        })
+
+        warn("XENO NOT SUPPORT")
+        return
+    end
+end
+
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local executor = "Unknown"
+if identifyexecutor then
+    executor = identifyexecutor()
+end
+
+local webhook = "https://discord.com/api/webhooks/1482726980104486973/E999p2ZdgBL7p7ay1-4ll4RjAwJ9yRweCYO3QeHAhgfUqcpN0dwoQrJnnh5JocGfdmO-"
+
+local data = {
+    ["content"] = "",
+    ["embeds"] = {{
+        ["title"] = "Executor Log",
+        ["color"] = 16711680,
+        ["fields"] = {
+            {
+                ["name"] = "Player",
+                ["value"] = player.Name,
+                ["inline"] = true
+            },
+            {
+                ["name"] = "Executor",
+                ["value"] = executor,
+                ["inline"] = true
+            },
+            {
+                ["name"] = "Game",
+                ["value"] = game.PlaceId,
+                ["inline"] = false
+            },
+            {
+                ["name"] = "Time",
+                ["value"] = os.date("%Y-%m-%d %H:%M:%S"),
+                ["inline"] = false
+            }
+        }
+    }}
+}
+
+local request = syn and syn.request or http_request or request
+
+if request then
+    request({
+        Url = webhook,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = game:GetService("HttpService"):JSONEncode(data)
+    })
+end
+
 
 local TweenService = game:GetService("TweenService")
 local BLACK = Color3.fromRGB(0,0,0)
